@@ -11,13 +11,19 @@
     <form id="signInfo">
       Brand Name: <input type="text" id="bName" value="Brand"></br>
       Product Name: <input type="text" id="pName" value="Product"></br>
-      Description: <input type="text" id="dName" value="Description"></br>
+      Description: <textarea id="dName" cols="20" rows="3">Description</textarea></br>
       Price: <input type="text" id="pValue" value="6" ></br>
       Unit Price: <input type="text" id="uPrice" value="1.00" ></br>
       UOM: <input type="text" id="UOM" value="100G" ></br>
       UPC: <input type="text" id="UPC" value="1234567890" ></br>
       End Date: <input type="date" id="endDate" value="2017-12-31" ></br>
-      Show Background <input type="checkbox" id="bgCheck" onchange="addSign()"></br>
+      <select id="signType">
+        <option value="ad">◆</option>
+        <option value="ed">EDLP</option>
+        <option value="pc">PC</option>
+        <option value="ts">TS</option>
+      </select>
+      Show Background <input type="checkbox" id="bgCheck" onchange="addSign()" checked></br>
       <input type="button" onclick="addSign()" value="Generate">
     </form> 
 
