@@ -9,7 +9,11 @@ window.onload = function() {
         format: 'letter'
     });
 
-    addSign();
+    if((typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1)){
+        document.getElementById("genButton").value="Download";
+    }else{
+        addSign();
+    }
 }
 
 function drawBackground(x,y) {
