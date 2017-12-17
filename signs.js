@@ -1,4 +1,6 @@
 var doc;
+var w = 88;
+var h = 57;
 
 window.onload = function() {
     //generateSign();
@@ -9,11 +11,16 @@ window.onload = function() {
 
 }
 
+function drawBackground(x,y) {
+    doc.setFillColor(255,0,0);
+    doc.rect(10+x*w, 26+y*h, 86, 10,'F');
+    doc.setFillColor(0,150,0);
+    doc.rect(10+x*w, 69+y*h, 40, 10,'F');
+    doc.triangle(50+x*w,69+y*h,55+x*w,74+y*h,50+x*w,79+y*h,'F')
+}
+
 function generateSign(x, y, productBrand, productName, productDescription, price, unitPrice, UOM, UPC, endDate) {
     doc.setFont('arial');
-
-    w = 88;
-    h = 57
 
     doc.setFontStyle("bold");
     doc.setFontSize(14);
@@ -48,14 +55,22 @@ function addSign() {
     unit = document.getElementById("uPrice").value;
     uom = document.getElementById("UOM").value;
     upc = document.getElementById("UPC").value;
-    end = document.getElementById("endDate").value;
 
+    endDate = document.getElementById("endDate").valueAsDate;
+    end = (endDate.getUTCMonth()+1) + "/" + endDate.getUTCDate() + "/" + endDate.getUTCFullYear();
+
+    showBackground = document.getElementById("bgCheck").checked;
     for(i=0; i<3;i++){
         for(j=0; j<3;j++){
+            if(showBackground) drawBackground(i,j);
             generateSign(i, j, brand, product, description, price, unit, uom, upc, end);
         }
     }
     
-    doc.save('test.pdf');
-    
+    //doc.save('test.pdf');
+    document.getElementById("preview").src = doc.output('datauristring');
+    doc = new jsPDF({
+        orientation: 'landscape',
+        format: 'letter'
+    });
 }
