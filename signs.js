@@ -7,8 +7,6 @@ window.onload = function() {
         format: 'letter'
     });
 
-    
-
 }
 
 function generateSign(x, y, productBrand, productName, productDescription, price, unitPrice, UOM, UPC, endDate) {
@@ -61,42 +59,3 @@ function addSign() {
     doc.save('test.pdf');
     
 }
-
-/*function generateSign() {
-    sign = document.getElementById("sign");
-    brand = document.getElementById("bName").value;
-    product = document.getElementById("pName").value;
-    description = document.getElementById("dName").value;
-    price = document.getElementById("pValue").value.split(".");
-    dollars = (price[0]) ? price[0]:"0";
-    cents = (price[1]) ? price[1]:"00";
-
-    document.getElementById("signBrand1").innerHTML = brand;
-    document.getElementById("signProduct1").innerHTML = product;
-    document.getElementById("signDescription1").innerHTML = description;
-    document.getElementById("signPrice11").innerHTML = dollars;
-    document.getElementById("signPrice22").innerHTML = cents;
-}
-
-function closePrint() {
-    document.body.removeChild(this.__container__);
-}
-
-function setPrint() {
-    this.contentWindow.__container__ = this;
-    this.contentWindow.onbeforeunload = closePrint;
-    this.contentWindow.onafterprint = closePrint;
-    this.contentWindow.focus();
-    this.contentWindow.print();
-}
-
-function printSigns() {
-    printWindow = document.createElement("iframe");
-    printWindow.onload = setPrint();
-    printWindow.style.visibility = "hidden";
-    printWindow.style.position = "fixed";
-    printWindow.style.right = "0";
-    printWindow.style.bottom = "0";
-    printWindow.src = sURL;
-    document.body.appendChild(printWindow);
-}*/
