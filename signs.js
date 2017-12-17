@@ -29,7 +29,7 @@ function drawBackground(x,y) {
     doc.triangle(50+x*w,69+y*h,55+x*w,74+y*h,50+x*w,79+y*h,'F')
 }
 
-function generateSign(x, y, productBrand, productName, productDescription, price, unitPrice, UOM, UPC, endDate, saleType) {
+function generateSign(x, y, productBrand, productName, productDescription, price, unitPrice, UOM, UPC, endDate, saleType, youSave, options) {
     doc.setFont('arial');
 
     doc.setFontStyle("bold");
@@ -49,7 +49,11 @@ function generateSign(x, y, productBrand, productName, productDescription, price
 
     doc.setFontSize(12);
     doc.setFontStyle('bold');
-    doc.text("Save Now!", 11+x*w , 75+y*h);
+    if(youSave) {
+        doc.text("You Save $" + youSave + " ea", 11+x*w , 75+y*h);
+    } else {
+        doc.text("Save Now!", 11+x*w , 75+y*h);
+    }
 
     doc.setFontSize(9);
     doc.setFontStyle('normal');
@@ -57,11 +61,24 @@ function generateSign(x, y, productBrand, productName, productDescription, price
     doc.text(UPC, 55+x*w, 78+y*h);
     doc.text(endDate, 79+x*w, 78+y*h);
 
+    if(options.thisVar) {
+        doc.setFontSize(14);
+        doc.setFontStyle('bold');
+        doc.text("This Variety Only", 10+x*w, 66+y*h);
+    }
+
+    if(options.closeDate) {
+        doc.setFontSize(16);
+        doc.setFontStyle('normal');
+        doc.text("Close-Dated", 95+x*w, 41+y*h, align="right");
+    }
+    
+
     switch(saleType) {
         case 0://ad
             doc.setFillColor(0);
-            doc.triangle(75+x*w,77+y*h,76+x*w,76+y*h,77+x*w,77+y*h,'F');
-            doc.triangle(75+x*w,77+y*h,76+x*w,78+y*h,77+x*w,77+y*h,'F');
+            doc.triangle(75+x*w,77+y*h,76+x*w,75.75+y*h,77+x*w,77+y*h,'F');
+            doc.triangle(75+x*w,77+y*h,76+x*w,78.25+y*h,77+x*w,77+y*h,'F');
         break;
         case 1://ed
             doc.text("ED", 74+x*w, 78+y*h);
@@ -82,10 +99,17 @@ function addSign() {
     description = document.getElementById("dName").value;
     
     
+    regPrice = document.getElementById("rpValue").value;
     pDiv = document.getElementById("priceDiv").value;
     price = document.getElementById("pValue").value;
+    pricePer = price / pDiv;
     if(pDiv != "1") price = pDiv + "/" + price;
     
+    youSave = regPrice - pricePer;
+    if(youSave < 0) {
+        alert("Error: Sale price is higher than regular price!");
+        return;
+    }
     
     
     unit = document.getElementById("uPrice").value;
@@ -96,10 +120,15 @@ function addSign() {
     end = (endDate.getUTCMonth()+1) + "/" + endDate.getUTCDate() + "/" + endDate.getUTCFullYear();
     sale = document.getElementById("signType").selectedIndex;
     showBackground = document.getElementById("bgCheck").checked;
+
+    tv = document.getElementById("thisVar").checked;
+    cd = document.getElementById("closeDate").checked;
+    options = {thisVar: tv, closeDate: cd};
+
     for(i=0; i<3;i++){
         for(j=0; j<3;j++){
             if(showBackground) drawBackground(i,j);
-            generateSign(i, j, brand, product, description, price, unit, uom, upc, end,sale);
+            generateSign(i, j, brand, product, description, price, unit, uom, upc, end,sale,youSave.toFixed(2), options);
         }
     }
     

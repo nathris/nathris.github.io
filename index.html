@@ -8,14 +8,17 @@
     <link rel="stylesheet" type="text/css" href="style.css">    
   </head>
   <body>
-    <form id="signInfo">
-      Brand Name: <input type="text" id="bName" value="Brand"></br>
-      Product Name: <input type="text" id="pName" value="Product"></br>
+    <div id="productDescription">
+      Brand Name: <input type="text" id="bName" value="Brand"> </br>
+      Product Name: <input type="text" id="pName" value="Product"> </br>
       Description: <textarea id="dName" cols="20" rows="3">Description</textarea></br>
-      Price: <input type="number" id="priceDiv" value="1" min="1" width="30px">/<input type="number" id="pValue" value="5.00" ></br>
-      Regular Price: <input type="number" id="rpValue" value="3.99" > </br>
-      Unit Price: <input type="text" id="uPrice" value="1.00" ></br>
-      UOM: <input type="text" id="UOM" value="100G" ></br>
+    </div>
+    <div id="productPricing">
+        Price: <input type="number" id="priceDiv" value="2" min="1" style='width:3em'>/<input type="number" id="pValue" value="5.00" style='width:5em' ></br>
+        Regular Price: <input type="number" id="rpValue" value="3.99" style='width:3em' > </br>
+    </div>
+    <div id="productDetails">
+      Unit Price: <input type="text" id="uPrice" value="1.00" style='width:5em' >UOM: <input type="text" id="UOM" value="100G" style='width:5em' ></br> 
       UPC: <input type="text" id="UPC" value="1234567890" ></br>
       End Date: <input type="date" id="endDate" value="2017-12-31" ></br>
       <select id="signType">
@@ -24,10 +27,14 @@
         <option value="pc">PC</option>
         <option value="ts">TS</option>
       </select>
+    </div>
+    <div id="previewSettings">
       Show Background <input type="checkbox" id="bgCheck" onchange="addSign()" checked></br>
-      <input type="button" id="genButton" onclick="addSign()" value="Generate">
-    </form> 
-
+      This Var Only <input type="checkbox" id="thisVar" ></br>
+      Close Dated <input type="checkbox" id="closeDate" ></br>
+      <input type="button" id="genButton" onclick="addSign()" value="Generate"> 
+    </div>
     <iframe id='preview'></iframe>
+    
   </body>
 </html>
