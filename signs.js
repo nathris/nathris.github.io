@@ -80,7 +80,14 @@ function addSign() {
     brand = document.getElementById("bName").value;
     product = document.getElementById("pName").value;
     description = document.getElementById("dName").value;
+    
+    
+    pDiv = document.getElementById("priceDiv").value;
     price = document.getElementById("pValue").value;
+    if(pDiv != "1") price = pDiv + "/" + price;
+    
+    
+    
     unit = document.getElementById("uPrice").value;
     uom = document.getElementById("UOM").value;
     upc = document.getElementById("UPC").value;
