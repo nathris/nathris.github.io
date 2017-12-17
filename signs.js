@@ -9,8 +9,13 @@ window.onload = function() {
         format: 'letter'
     });
 
-    if((typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1)){
-        document.getElementById("genButton").value="Download";
+    testExp = new RegExp('Android|webOS|iPhone|iPad|' +
+    'BlackBerry|Windows Phone|'  +
+    'Opera Mini|IEMobile|Mobile' , 
+   'i');
+
+   if (testExp.test(navigator.userAgent)) {
+           document.getElementById("genButton").value="Download";
     }else{
         addSign();
     }
