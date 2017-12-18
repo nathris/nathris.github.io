@@ -41,7 +41,7 @@ function generateSign(x, y, productBrand, productName, productDescription, price
     doc.setFontStyle("normal");
     doc.setFontSize(10);
     doc.text(productBrand, lm+x*w, 41+y*h);
-    doc.text(productDescription, lm+x*w, 524+y*h);
+    doc.text(productDescription, lm+x*w, 54+y*h);
 
     p = price.split(".");    
     doc.setFontSize(69);
