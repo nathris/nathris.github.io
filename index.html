@@ -10,42 +10,25 @@
   </head>
   <body>
     <div id="labels">
-      Brand Name </br>
-      Product Name </br>
-      Description </br></br></br>
-    </div>
-    <div id="labels2">
-      Price </br>
-      Regular Price </br>
-      Unit Price </br>
-      UOM </br>
-      UPC </br>
-      End Date </br>
-      Sale Type </br>
-      This Var </br>
-      Close Dated </br>
-    </div>
-    <div id="inputs">
-      <input type="text" id="bName" value="Kraft"> </br>
-      <input type="text" id="pName" value="Stove Top Stuffing Mix"> </br>
-      <textarea id="dName" cols="20" rows="3">Turkey&#13;&#10;120g</textarea></br>
-    </div>
-    <div id="inputs2">
-      <input type="number" id="priceDiv" value="4" min="1" style='width:2em'>/<input type="number" id="pValue" value="5.00" style='width:7em' ></br>
-      <input type="number" id="rpValue" value="2.39"> </br>
-      <input type="text" id="uPrice" value="1.04"></br>
-      <input type="text" id="UOM" value="100G"></br> 
-      <input type="text" id="UPC" value="6618804390" ></br>
-      <input type="date" id="endDate" value="2017-12-25" ></br>
-      <select id="signType">
+      Brand Name <input type="text" id="bName" value="Kraft"></br>
+      Product Name <input type="text" id="pName" value="Stove Top Stuffing Mix"></br>
+      <label id="desc">Description </label><textarea id="dName" cols="20" rows="3">Turkey&#13;&#10;120g</textarea></br>
+      Price <input type="number" id="priceDiv" value="4" min="1" style='width:2em'>/<input type="number" id="pValue" value="5.00" ></br>
+      Regular Price <input type="number" id="rpValue" value="2.39"></br>
+      Unit Price <input type="text" id="uPrice" value="1.04"></br>
+      UOM <input type="text" id="UOM" value="100G"></br>
+      UPC <input type="text" id="UPC" value="6618804390" ></br>
+      End Date <input type="date" id="endDate" value="2017-12-25" ></br>
+      Sale Type <select id="signType">
         <option value="ad">◆</option>
         <option value="ed">EDLP</option>
         <option value="pc">PC</option>
         <option value="ts">TS</option>
-      </select>
-      <input type="checkbox" id="thisVar" ></br>
-      <input type="checkbox" id="closeDate" ></br>
+      </select></br>
+      This Var <input type="checkbox" id="thisVar" ></br>
+      Close Dated <input type="checkbox" id="closeDate" ></br>
     </div>
+    
     <input type="button" id="genButton" onclick="addSign()" value="Add Sign">           
     <div id="previewSettings">
       Show Background <input type="checkbox" id="bgCheck" onchange="printSigns()" checked> Number of Signs: <label id="numSigns">0</label>
