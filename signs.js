@@ -1,6 +1,11 @@
 var doc;
 var w = 89;
 var h = 57;
+var lm = 8;
+
+var signs = [];
+
+var pages = 0;
 
 window.onload = function() {
     newDoc();
@@ -12,7 +17,8 @@ window.onload = function() {
    if (testExp.test(navigator.userAgent)) {
            document.getElementById("genButton").value="Download";
     }else{
-        addSign();
+        //addSign();
+        printSigns();
     }
 
 }
@@ -36,63 +42,66 @@ function drawBackground(x,y) {
     doc.triangle(46+x*w,69+y*h,52+x*w,74+y*h,46+x*w,79+y*h,'F')
 }
 
-function generateSign(x, y, productBrand, productName, productDescription, price, unitPrice, UOM, UPC, endDate, saleType, youSave, options) {
+function generateSign(x, y, sign) {
     doc.setFont("Helvetica Neue");
 
-    lm = 8;
-
+    // Product Name
     doc.setFontStyle("bold");
-    if(productName.length < 14) doc.setFontSize(15);
-    else if (productName.length < 20) doc.setFontSize(14);
+    if(sign.product.length < 14) doc.setFontSize(15);
+    else if (sign.product.length < 20) doc.setFontSize(14);
     else doc.setFontSize(12);
-    doc.text(productName, lm+x*w, 46+y*h);
+    doc.text(sign.product, lm+x*w, 46+y*h);
 
+    // Brand and Description
     doc.setFontStyle("normal");
     doc.setFontSize(10);
-    doc.text(productBrand, lm+x*w, 41+y*h);
-    doc.text(productDescription, lm+x*w, 50+y*h);
+    doc.text(sign.brand, lm+x*w, 41+y*h);
+    doc.text(sign.description, lm+x*w, 50+y*h);
 
+    // Price big
     doc.setFont("helvetica");
-    p = price.split(".");  
+    p = sign.price.split(".");  
     if(p[0].length >= 3)  doc.setFontSize(60);
     else if(p[0].length == 2)  doc.setFontSize(66);
     else doc.setFontSize(68);
     doc.text((p[0]) ? p[0]:"0", lm+68+x*w, 64+y*h, align="right");
+    // Price small
     if(p[0].length >= 3)  doc.setFontSize(30);
     else if(p[0].length == 2)  doc.setFontSize(33);
     else doc.setFontSize(34);
     doc.text((p[1]) ? p[1]:"00", lm+68+x*w, p[0].length >= 3 ? 56+y*h : 55+y*h);
     doc.setFont("Helvetica Neue");
 
+    // You Save
     doc.setFontSize(11);
     doc.setFontStyle('bold');
-    if(youSave) {
-        doc.text("You Save $" + youSave + " ea", lm+x*w , 75+y*h);
+    if(sign.youSave) {
+        doc.text("You Save $" + sign.youSave + " ea", lm+x*w , 75.5+y*h);
     } else {
-        doc.text("Save Now!", lm+x*w , 75+y*h);
+        doc.text("Save Now!", lm+x*w , 75.5+y*h);
     }
 
+    // Details
     doc.setFontSize(8);
     doc.setFontStyle('normal');
     doc.text("Unit Price: $  ", lm+46+x*w, 73.5+y*h);
-    doc.text(unitPrice + " / " + UOM, lm+80+x*w, 73.5+y*h, align="right")
-    doc.text(UPC, lm+45+x*w, 77.5+y*h);
-    doc.text(endDate, lm+81+x*w, 77.5+y*h, align="right");
+    doc.text(sign.unitPrice + " / " + sign.uom, lm+80+x*w, 73.5+y*h, align="right")
+    doc.text(sign.upc, lm+45+x*w, 77.5+y*h);
+    doc.text(sign.end, lm+81+x*w, 77.5+y*h, align="right");
 
-    if(options.thisVar) {
+    // Extras
+    if(sign.thisVar) {
         doc.setFontSize(14);
         doc.setFontStyle('bold');
         doc.text("This Variety Only", lm+x*w, 66+y*h);
     }
-
-    if(options.closeDate) {
+    if(sign.closeDate) {
         doc.setFontSize(16);
-        doc.setFontStyle('normal');
-        doc.text("Close-Dated", lm+85+x*w, 41+y*h, align="right");
+        doc.setFontStyle('bold');
+        doc.text("Close-Dated", lm+80+x*w, 41+y*h, align="right");
     }
     
-
-    switch(saleType) {
+    switch(sign.saleType) {
         case 0://ad
             doc.setFillColor(0);
             doc.triangle(lm+63+x*w,76.5+y*h,lm+64+x*w,75.25+y*h,lm+65+x*w,76.5+y*h,'F');
@@ -111,45 +120,67 @@ function generateSign(x, y, productBrand, productName, productDescription, price
     
 }
 
+function clearSigns() {
+    signs = [];
+    printSigns();
+}
+
+function printSigns() {
+    showBackground = document.getElementById("bgCheck").checked;
+    pages = 0;
+    for(i = 0; i < signs.length; i++) {
+        y = Math.floor(i/3);
+        x = i%3;
+        if(i%9 == 0 && i > 2) {
+            pages++;
+            doc.addPage();
+        }
+        if(showBackground) drawBackground(x,y-3*pages);
+        //generateSign(x, y-3*pages, signs[i].brand, signs[i].product, signs[i].description, signs[i].price, signs[i].unit, signs[i].uom, signs[i].upc, signs[i].end,signs[i].sale,signs[i].youSave.toFixed(2));
+        generateSign(x, y-3*pages, signs[i]);
+    }
+    
+    document.getElementById("preview").src = doc.output('datauristring');
+    newDoc();
+}
+
 function addSign() {
-    brand = document.getElementById("bName").value;
-    product = document.getElementById("pName").value;
-    description = document.getElementById("dName").value;
+    n = signs.length;
+    signs[n] = {};
+    signs[n].brand = document.getElementById("bName").value;
+    signs[n].product = document.getElementById("pName").value;
+    signs[n].description = document.getElementById("dName").value;
     
     
     regPrice = document.getElementById("rpValue").value;
     pDiv = document.getElementById("priceDiv").value;
-    price = document.getElementById("pValue").value;
-    pricePer = price / pDiv;
-    if(pDiv != "1") price = pDiv + "/" + price;
+    signs[n].price = document.getElementById("pValue").value;
+    pricePer = signs[n].price / pDiv;
+    if(pDiv != "1") signs[n].price = pDiv + "/" + signs[n].price;
     
-    youSave = regPrice - pricePer;
-    if(youSave < 0) {
+    signs[n].youSave = (regPrice - pricePer).toFixed(2);
+    if(signs[n].youSave < 0) {
+        signs.pop();
         alert("Error: Sale price is higher than regular price!");
         return;
     }
     
     
-    unit = document.getElementById("uPrice").value;
-    uom = document.getElementById("UOM").value;
-    upc = document.getElementById("UPC").value;
+    signs[n].unitPrice = document.getElementById("uPrice").value;
+    signs[n].uom = document.getElementById("UOM").value;
+    signs[n].upc = document.getElementById("UPC").value;
 
     endDate = document.getElementById("endDate").valueAsDate;
-    end = (endDate.getUTCMonth()+1) + "/" + endDate.getUTCDate() + "/" + endDate.getUTCFullYear();
-    sale = document.getElementById("signType").selectedIndex;
-    showBackground = document.getElementById("bgCheck").checked;
+    signs[n].end = (endDate.getUTCMonth()+1) + "/" + endDate.getUTCDate() + "/" + endDate.getUTCFullYear();
+    signs[n].saleType = document.getElementById("signType").selectedIndex;
 
     tv = document.getElementById("thisVar").checked;
     cd = document.getElementById("closeDate").checked;
-    options = {thisVar: tv, closeDate: cd};
+    signs[n].thisVar = tv;
+    signs[n].closeDate = cd;
 
-    for(i=0; i<3;i++){
-        for(j=0; j<3;j++){
-            if(showBackground) drawBackground(i,j);
-            generateSign(i, j, brand, product, description, price, unit, uom, upc, end,sale,youSave.toFixed(2), options);
-        }
-    }
-    
-    document.getElementById("preview").src = doc.output('datauristring');
-    newDoc();
+
+    document.getElementById("numSigns").innerHTML = signs.length;
+
+    printSigns();
 }
