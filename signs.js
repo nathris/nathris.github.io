@@ -108,13 +108,13 @@ function generateSign(x, y, sign) {
             doc.triangle(lm+63+x*w,76.5+y*h,lm+64+x*w,77.75+y*h,lm+65+x*w,76.5+y*h,'F');
         break;
         case 1://ed
-            doc.text("ED", lm+63+x*w, 78+y*h);
+            doc.text("ED", lm+62.5+x*w, 77.5+y*h);
         break;
         case 2://pc
-            doc.text("PC", lm+63+x*w, 78+y*h);
+            doc.text("PC", lm+62.5+x*w, 77.5+y*h);
         break;
         case 3://ts
-            doc.text("TS", lm+63+x*w, 78+y*h);        
+            doc.text("TS", lm+62.5+x*w, 77.5+y*h);        
         break;
     }
     
