@@ -1,5 +1,10 @@
+@font-face {
+    font-family: 'Helvetica Neue';
+    src: url('fonts/HelveticaNeue Light.ttf');
+} 
+
 body {
-    font-family: "Helvetica";
+    font-family: "Helvetica Neue";
 }
 
 input {
@@ -7,6 +12,7 @@ input {
     border: 1px solid black;
     margin: 1px;
     padding: 3px;
+    font-family: "Helvetica Neue";
 }
 
 #genButton {
@@ -26,6 +32,7 @@ textarea {
     margin: 1px;
     margin-right: 6px;
     padding: 3px;
+    font-family: "Helvetica Neue";
 }
 
 #preview {

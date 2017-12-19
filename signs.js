@@ -3,22 +3,29 @@ var w = 89;
 var h = 57;
 
 window.onload = function() {
-    //generateSign();
-    doc = new jsPDF({
-        orientation: 'landscape',
-        format: 'letter'
-    });
+    newDoc();
 
     testExp = new RegExp('Android|webOS|iPhone|iPad|' +
     'BlackBerry|Windows Phone|'  +
     'Opera Mini|IEMobile|Mobile' , 
    'i');
-
    if (testExp.test(navigator.userAgent)) {
            document.getElementById("genButton").value="Download";
     }else{
         addSign();
     }
+
+}
+
+function newDoc(){
+    doc = new jsPDF({
+        orientation: 'landscape',
+        format: 'letter'
+    });
+
+    doc.addFont("HelveticaNeue Light.ttf","Helvetica Neue", "normal");
+    doc.addFont("HelveticaNeueBold.ttf","Helvetica Neue", "bold");
+    doc.addFont("HelveticaNeueMedium.ttf","Helvetica Neue", "medium");
 }
 
 function drawBackground(x,y) {
@@ -30,12 +37,11 @@ function drawBackground(x,y) {
 }
 
 function generateSign(x, y, productBrand, productName, productDescription, price, unitPrice, UOM, UPC, endDate, saleType, youSave, options) {
-    doc.setFont('helvetica');
+    doc.setFont("Helvetica Neue");
 
     lm = 8;
 
     doc.setFontStyle("bold");
-    console.log(productName.length);
     if(productName.length < 14) doc.setFontSize(15);
     else if (productName.length < 20) doc.setFontSize(14);
     else doc.setFontSize(12);
@@ -46,6 +52,7 @@ function generateSign(x, y, productBrand, productName, productDescription, price
     doc.text(productBrand, lm+x*w, 41+y*h);
     doc.text(productDescription, lm+x*w, 50+y*h);
 
+    doc.setFont("helvetica");
     p = price.split(".");  
     if(p[0].length >= 3)  doc.setFontSize(60);
     else if(p[0].length == 2)  doc.setFontSize(66);
@@ -55,6 +62,7 @@ function generateSign(x, y, productBrand, productName, productDescription, price
     else if(p[0].length == 2)  doc.setFontSize(33);
     else doc.setFontSize(34);
     doc.text((p[1]) ? p[1]:"00", lm+68+x*w, p[0].length >= 3 ? 56+y*h : 55+y*h);
+    doc.setFont("Helvetica Neue");
 
     doc.setFontSize(11);
     doc.setFontStyle('bold');
@@ -142,10 +150,6 @@ function addSign() {
         }
     }
     
-    //doc.save('test.pdf');
     document.getElementById("preview").src = doc.output('datauristring');
-    doc = new jsPDF({
-        orientation: 'landscape',
-        format: 'letter'
-    });
+    newDoc();
 }
