@@ -29,9 +29,10 @@ function newDoc(){
         format: 'letter'
     });
 
-    doc.addFont("HelveticaNeue Light.ttf","Helvetica Neue", "normal");
+    doc.addFont("HelveticaNeueLight.ttf","Helvetica Neue", "light");
     doc.addFont("HelveticaNeueBold.ttf","Helvetica Neue", "bold");
     doc.addFont("HelveticaNeueMedium.ttf","Helvetica Neue", "medium");
+    doc.addFont("HelveticaNeue.ttf", "Helvetica Neue", "normal");
 }
 
 function drawBackground(x,y) {
@@ -46,20 +47,21 @@ function generateSign(x, y, sign) {
     doc.setFont("Helvetica Neue");
 
     // Product Name
-    doc.setFontStyle("bold");
+    doc.setFontStyle("medium");
     if(sign.product.length < 14) doc.setFontSize(15);
     else if (sign.product.length < 20) doc.setFontSize(14);
     else doc.setFontSize(12);
     doc.text(sign.product, lm+x*w, 46+y*h);
 
     // Brand and Description
-    doc.setFontStyle("normal");
+    doc.setFontStyle("light");
     doc.setFontSize(10);
     doc.text(sign.brand, lm+x*w, 41+y*h);
     doc.text(sign.description, lm+x*w, 50+y*h);
 
     // Price big
-    doc.setFont("helvetica");
+    //doc.setFont("helvetica");
+    doc.setFontStyle("normal")
     p = sign.price.split(".");  
     if(p[0].length >= 3)  doc.setFontSize(60);
     else if(p[0].length == 2)  doc.setFontSize(66);
@@ -70,11 +72,11 @@ function generateSign(x, y, sign) {
     else if(p[0].length == 2)  doc.setFontSize(33);
     else doc.setFontSize(34);
     doc.text((p[1]) ? p[1]:"00", lm+68+x*w, p[0].length >= 3 ? 56+y*h : 55+y*h);
-    doc.setFont("Helvetica Neue");
+    //doc.setFont("Helvetica Neue");
 
     // You Save
     doc.setFontSize(11);
-    doc.setFontStyle('bold');
+    doc.setFontStyle('medium');
     if(sign.youSave) {
         doc.text("You Save $" + sign.youSave + " ea", lm+x*w , 75.5+y*h);
     } else {
