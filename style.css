@@ -19,11 +19,21 @@ input {
 
 input[type=checkbox] {
     width: 25px;
-
+}
+input[type=radio] {
+    width: 20px;
 }
 
 #pValue {
-    width: 83px!important;
+    width: 56px!important;
+}
+
+#poLabel {
+    margin-right: 28px;
+}
+#bogoLabel {
+    margin-right: 55px;
+    margin-left: 6px;
 }
 
 #thisVar, #closeDate {
@@ -68,8 +78,8 @@ textarea {
 }
 
 #preview {
-    width: 640px;
-    height: 480px;
+    width: 1200px;
+    height: 800px;
     position: absolute;
     top: 30px;
     left: 250px;
@@ -155,4 +165,16 @@ textarea {
     position: absolute;
     right: 130px;
     top: 2px;
+}
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
+input[type=date]::-webkit-inner-spin-button, 
+input[type=date]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
 }

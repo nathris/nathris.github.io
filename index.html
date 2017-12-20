@@ -13,7 +13,9 @@
       Brand Name <input type="text" id="bName" value="Kraft"></br>
       Product Name <input type="text" id="pName" value="Stove Top Stuffing Mix"></br>
       <label id="desc">Description </label><textarea id="dName" cols="20" rows="3">Turkey&#13;&#10;120g</textarea></br>
-      Price <input type="number" id="priceDiv" value="4" min="1" style='width:2em'>/<input type="number" id="pValue" value="5.00" ></br>
+      Price <input type="radio" name="priceType" value="dollar" checked> <input type="number" id="priceDiv" value="4" min="1" style='width:2em'>/<input type="number" id="pValue" value="5.00" ></br>
+      <input type="radio" name="priceType" value="percent"> <input type="number" id="percentOff" value="4" min="1" max="99" style='width:2em'> <label id="poLabel">% Off</label></br>
+      <input type="radio" name="priceType" value="bogo"><label id="bogoLabel">BOGO</label> </br>
       Regular Price <input type="number" id="rpValue" value="2.39"></br>
       Unit Price <input type="text" id="uPrice" value="1.04"></br>
       UOM <input type="text" id="UOM" value="100G"></br>

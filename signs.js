@@ -48,9 +48,9 @@ function generateSign(x, y, sign) {
 
     // Product Name
     doc.setFontStyle("medium");
-    if(sign.product.length < 14) doc.setFontSize(15);
-    else if (sign.product.length < 20) doc.setFontSize(14);
-    else doc.setFontSize(12);
+    if(sign.product.length < 14) doc.setFontSize(17);
+    else if (sign.product.length < 20) doc.setFontSize(15);
+    else doc.setFontSize(13);
     doc.text(sign.product, lm+x*w, 46+y*h);
 
     // Brand and Description
@@ -59,32 +59,84 @@ function generateSign(x, y, sign) {
     doc.text(sign.brand, lm+x*w, 41+y*h);
     doc.text(sign.description, lm+x*w, 50+y*h);
 
-    // Price big
-    //doc.setFont("helvetica");
-    doc.setFontStyle("normal")
-    p = sign.price.split(".");  
-    if(p[0].length >= 3)  doc.setFontSize(60);
-    else if(p[0].length == 2)  doc.setFontSize(66);
-    else doc.setFontSize(68);
-    doc.text((p[0]) ? p[0]:"0", lm+68+x*w, 64+y*h, align="right");
-    // Price small
-    if(p[0].length >= 3)  doc.setFontSize(30);
-    else if(p[0].length == 2)  doc.setFontSize(33);
-    else doc.setFontSize(34);
-    doc.text((p[1]) ? p[1]:"00", lm+68+x*w, p[0].length >= 3 ? 56+y*h : 55+y*h);
+
+
+    // Price
+    switch(sign.priceType) {
+        case "dollar":
+            doc.setFontStyle("normal")
+            p = sign.price.split(".");  
+            if(p[0].length >= 3) {
+                doc.setFontSize(58);
+                doc.text((p[0]) ? p[0]:"0", lm+70.5+x*w, 62.5+y*h, align="right");
+                doc.setFontSize(29);
+                doc.text((p[1]) ? p[1]:"00", lm+70.5+x*w, 54.5+y*h);
+            } else if(p[0] === "0") {
+                doc.setFontSize(68);
+                doc.text((p[1]) ? p[1]:"00", lm+71+x*w, 64+y*h, align="right");
+                doc.setFontSize(33);
+                doc.text("¢", lm+71+x*w, 55+y*h);
+            } else {
+                doc.setFontSize(66);
+                doc.text((p[0]) ? p[0]:"0", lm+68+x*w, 64+y*h, align="right");
+                doc.setFontSize(33);
+                doc.text((p[1]) ? p[1]:"00", lm+68+x*w, 55+y*h);
+            }
+            doc.setFontSize(11);
+            doc.setFontStyle('medium');
+            doc.text("You Save $" + sign.youSave + " ea", lm+x*w , 75.5+y*h);
+        break;
+        case "percent":
+            doc.setFontStyle("normal")
+            p = sign.price;
+            doc.setFontSize(68);
+            doc.text((p) ? p:"00", lm+71+x*w, 64+y*h, align="right");
+            doc.setFontSize(33);
+            doc.text("%", lm+71+x*w, 55+y*h);
+            doc.setFontSize(8.5);
+            doc.text("Off\nAt Till", lm+72+x*w, 60+y*h);
+            doc.setFontSize(11);
+            doc.setFontStyle('medium');
+            doc.text("Save Now!", lm+x*w , 75.5+y*h);
+        break;
+        case "bogo":
+            doc.setFillColor(0,0,0);
+            doc.roundedRect(lm+55+x*w, 40+y*h, 25, 25, 2, 2, 'F');
+            doc.setTextColor(255,255,255);
+            doc.setFontStyle('bold');
+            doc.setFontSize(18);
+            doc.text("BUY", lm+58+x*w, 47+y*h);
+            doc.text("GET", lm+58+x*w, 52.5+y*h);
+            doc.setFontSize(20);
+            doc.text("FREE", lm+58+x*w, 58.5+y*h);
+            doc.setFontSize(40);
+            doc.text("1", lm+70.5+x*w, 52.5+y*h);
+
+            doc.setFontSize(5);
+            doc.text("Same Item of Equal", lm+67+x*w, 61, align="center");
+            doc.text("or Lesser Value", lm+67+x*w, 63, align="center");
+        
+
+            doc.setTextColor(0,0,0);
+            doc.setFontSize(11);
+            doc.setFontStyle('medium');
+            doc.text("You Save $" + sign.regPrice + " ea", lm+x*w , 75.5+y*h);
+        break;
+    }
+    
+    
     //doc.setFont("Helvetica Neue");
 
     // You Save
     doc.setFontSize(11);
     doc.setFontStyle('medium');
     if(sign.youSave) {
-        doc.text("You Save $" + sign.youSave + " ea", lm+x*w , 75.5+y*h);
     } else {
         doc.text("Save Now!", lm+x*w , 75.5+y*h);
     }
 
     // Details
-    doc.setFontSize(8);
+    doc.setFontSize(8.5);
     doc.setFontStyle('normal');
     doc.text("Unit Price: $  ", lm+46+x*w, 73.5+y*h);
     doc.text(sign.unitPrice + " / " + sign.uom, lm+80+x*w, 73.5+y*h, align="right")
@@ -152,20 +204,24 @@ function addSign() {
     signs[n].brand = document.getElementById("bName").value;
     signs[n].product = document.getElementById("pName").value;
     signs[n].description = document.getElementById("dName").value;
+    signs[n].priceType = document.querySelector('input[name="priceType"]:checked').value;
     
     
-    regPrice = document.getElementById("rpValue").value;
+    signs[n].regPrice = document.getElementById("rpValue").value;
     pDiv = document.getElementById("priceDiv").value;
     signs[n].price = document.getElementById("pValue").value;
     pricePer = signs[n].price / pDiv;
     if(pDiv != "1") signs[n].price = pDiv + "/" + signs[n].price;
+    if(signs[n].priceType == "percent") signs[n].price = document.getElementById("percentOff").value;
+
     
-    signs[n].youSave = (regPrice - pricePer).toFixed(2);
+    signs[n].youSave = (signs[n].regPrice - pricePer).toFixed(2);
     if(signs[n].youSave < 0) {
         signs.pop();
         alert("Error: Sale price is higher than regular price!");
         return;
     }
+
     
     
     signs[n].unitPrice = document.getElementById("uPrice").value;
