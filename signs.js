@@ -85,6 +85,11 @@ function generateSign(x, y, sign) {
             doc.setFontSize(11);
             doc.setFontStyle('medium');
             doc.text("You Save $" + sign.youSave + " ea", lm+x*w , 75.5+y*h);
+
+            doc.setFontSize(8.5);
+            doc.setFontStyle('normal');
+            doc.text("Unit Price: $  ", lm+46+x*w, 73.5+y*h);
+            doc.text(sign.unitPrice + " / " + sign.uom, lm+80+x*w, 73.5+y*h, align="right")
         break;
         case "percent":
             doc.setFontStyle("normal")
@@ -123,24 +128,12 @@ function generateSign(x, y, sign) {
             doc.text("You Save $" + sign.regPrice + " ea", lm+x*w , 75.5+y*h);
         break;
     }
-    
-    
-    //doc.setFont("Helvetica Neue");
-
-    // You Save
-    doc.setFontSize(11);
-    doc.setFontStyle('medium');
-    if(sign.youSave) {
-    } else {
-        doc.text("Save Now!", lm+x*w , 75.5+y*h);
-    }
 
     // Details
     doc.setFontSize(8.5);
     doc.setFontStyle('normal');
-    doc.text("Unit Price: $  ", lm+46+x*w, 73.5+y*h);
-    doc.text(sign.unitPrice + " / " + sign.uom, lm+80+x*w, 73.5+y*h, align="right")
-    doc.text(sign.upc, lm+45+x*w, 77.5+y*h);
+    if(!sign.famGroup)
+        doc.text(sign.upc, lm+45+x*w, 77.5+y*h);
     doc.text(sign.end, lm+81+x*w, 77.5+y*h, align="right");
 
     // Extras
@@ -232,10 +225,9 @@ function addSign() {
     signs[n].end = (endDate.getUTCMonth()+1) + "/" + endDate.getUTCDate() + "/" + endDate.getUTCFullYear();
     signs[n].saleType = document.getElementById("signType").selectedIndex;
 
-    tv = document.getElementById("thisVar").checked;
-    cd = document.getElementById("closeDate").checked;
-    signs[n].thisVar = tv;
-    signs[n].closeDate = cd;
+    signs[n].thisVar = document.getElementById("thisVar").checked;
+    signs[n].closeDate = document.getElementById("closeDate").checked;
+    signs[n].famGroup = document.getElementById("famGroup").checked;
 
 
     document.getElementById("numSigns").innerHTML = signs.length;

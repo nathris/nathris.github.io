@@ -28,10 +28,12 @@
         <option value="ts">TS</option>
       </select></br>
       This Var <input type="checkbox" id="thisVar" ></br>
+      Family Group <input type="checkbox" id="famGroup" ></br>
       Close Dated <input type="checkbox" id="closeDate" ></br>
+      <input type="button" id="genButton" onclick="addSign()" value="Add Sign">       
     </div>
     
-    <input type="button" id="genButton" onclick="addSign()" value="Add Sign">           
+        
     <div id="previewSettings">
       Show Background <input type="checkbox" id="bgCheck" onchange="printSigns()" checked> Number of Signs: <label id="numSigns">0</label>
       <input type="button" id="printButton" onclick="printSigns()" value="Refresh">

@@ -36,7 +36,7 @@ input[type=radio] {
     margin-left: 6px;
 }
 
-#thisVar, #closeDate {
+#thisVar, #closeDate, #famGroup {
     margin-right: 109px;
 }
 
@@ -59,9 +59,7 @@ input[type=radio] {
     size: 20;
     width: 235px;
     height: 40px;
-    position: absolute;
-    top: 430px;
-    left: 5px;
+
     border: 1px solid black;
     border-radius: 2px;
 }
@@ -82,7 +80,7 @@ textarea {
     height: 800px;
     position: absolute;
     top: 30px;
-    left: 250px;
+    left: 260px;
     border: 1px solid black;
     border-radius: 2px;
 }
@@ -92,21 +90,6 @@ textarea {
     height: 500px;
     position: absolute;
     top: 19px;
-    left: 0px;
-
-    line-height: 23px;
-
-    padding: 5px;
-
-    margin: 5px;
-    
-    text-align: right;        
-}
-#labels2 {
-    width: 110px;
-    height: 300px;
-    position: absolute;
-    top: 115px;
     left: 0px;
 
     line-height: 23px;
@@ -132,26 +115,13 @@ textarea {
     margin: 5px;
 }
 
-#inputs2 {
-    width: 150px;
-    height: 600px;
-    position: absolute;
-    top: 115px;
-    left: 110px;
-    
-    line-height: 20px;
-
-    padding: 5px;
-
-    margin: 5px;
-}
 
 #previewSettings {
     width: 643px;
     height: 24px;
     position: absolute;
     top:0px;
-    left:250px;
+    left:260px;
 
     padding-top: 5px; 
 }
