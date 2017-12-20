@@ -113,8 +113,8 @@ function generateSign(x, y, sign) {
             doc.text("1", lm+70.5+x*w, 52.5+y*h);
 
             doc.setFontSize(5);
-            doc.text("Same Item of Equal", lm+67+x*w, 61, align="center");
-            doc.text("or Lesser Value", lm+67+x*w, 63, align="center");
+            doc.text("Same Item of Equal", lm+67+x*w, 61+y*h, align="center");
+            doc.text("or Lesser Value", lm+67+x*w, 63+y*h, align="center");
         
 
             doc.setTextColor(0,0,0);
