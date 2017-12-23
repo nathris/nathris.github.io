@@ -48,19 +48,28 @@ function generateSign(x, y, sign) {
 
     // Product Name
     doc.setFontStyle("medium");
-    if(sign.product.length < 14) doc.setFontSize(17);
-    else if (sign.product.length < 20) doc.setFontSize(15);
-    else doc.setFontSize(13);
-    doc.text(sign.product, lm+x*w, 46+y*h);
-
-    // Brand and Description
-    doc.setFontStyle("light");
-    doc.setFontSize(10);
-    doc.text(sign.brand, lm+x*w, 41+y*h);
-    doc.text(sign.description, lm+x*w, 50+y*h);
-
-
-
+    if(sign.product.length < 14) {
+        doc.setFontSize(17);
+        doc.text(sign.product, lm+x*w, 46+y*h);
+        doc.setFontStyle("light");
+        doc.setFontSize(10);
+        doc.text(sign.brand, lm+x*w, 40.5+y*h);
+        doc.text(sign.description, lm+x*w, 50.5+y*h);
+    } else if (sign.product.length < 20) {
+        doc.setFontSize(15);
+        doc.text(sign.product, lm+x*w, 46+y*h);
+        doc.setFontStyle("light");
+        doc.setFontSize(10);
+        doc.text(sign.brand, lm+x*w, 41+y*h);
+        doc.text(sign.description, lm+x*w, 50+y*h);
+    } else {
+        doc.setFontSize(13);
+        doc.text(sign.product, lm+x*w, 46+y*h);
+        doc.setFontStyle("light");
+        doc.setFontSize(10);
+        doc.text(sign.brand, lm+x*w, 41+y*h);
+        doc.text(sign.description, lm+x*w, 50+y*h);
+    }
     // Price
     switch(sign.priceType) {
         case "dollar":
@@ -75,21 +84,56 @@ function generateSign(x, y, sign) {
                 doc.setFontSize(68);
                 doc.text((p[1]) ? p[1]:"00", lm+71+x*w, 64+y*h, align="right");
                 doc.setFontSize(33);
-                doc.text("¢", lm+71+x*w, 55+y*h);
+                doc.text("¢", lm+70+x*w, 55+y*h);
+                if(sign.bulkType == 1) {
+                    doc.setFontStyle("medium");
+                    doc.setFontSize(9);
+                    doc.text("per\n100g", lm+71+x*w, 60+y*h);                    
+                } else if(sign.bulkType ==  2) {
+                    doc.setFontStyle("medium");                    
+                    doc.setFontSize(9);
+                    doc.text("per lb", lm+71+x*w, 60+y*h);                    
+                }
             } else {
-                doc.setFontSize(66);
-                doc.text((p[0]) ? p[0]:"0", lm+68+x*w, 64+y*h, align="right");
-                doc.setFontSize(33);
-                doc.text((p[1]) ? p[1]:"00", lm+68+x*w, 55+y*h);
+                doc.setFontSize(74);
+                doc.text((p[0]) ? p[0]:"0", (p[0].slice(-1)==1) ? lm+70+x*w : lm+68+x*w, 66+y*h, align="right");
+                doc.setFontSize(37);
+                doc.text((p[1]) ? p[1]:"00", lm+68+x*w, 56.5+y*h);
+                if(sign.bulkType == 1) {
+                    doc.setFontStyle("medium");
+                    doc.setFontSize(10);
+                    doc.text("per\n100g", lm+69+x*w, 61+y*h);                    
+                } else if(sign.bulkType ==  2) {
+                    doc.setFontStyle("medium");                    
+                    doc.setFontSize(10);
+                    doc.text("per lb", lm+69+x*w, 61+y*h);                    
+                }
             }
-            doc.setFontSize(11);
-            doc.setFontStyle('medium');
-            doc.text("You Save $" + sign.youSave + " ea", lm+x*w , 75.5+y*h);
+            
+            switch(sign.bulkType) {
+                case 0:
+                    doc.setFontSize(11);
+                    doc.setFontStyle('medium');
+                    doc.text("You Save $" + sign.youSave + " ea", lm+x*w , 75.5+y*h);
+                break;
+                case 1:
+                    doc.setFontSize(10);
+                    doc.setFontStyle('medium');
+                    doc.text("You Save $" + sign.youSave + " per 100g", lm+x*w , 75.5+y*h); 
+                break;
+                case 2:
+                    doc.setFontSize(10);
+                    doc.setFontStyle('medium');
+                    doc.text("You Save $" + sign.youSave + " per lb", lm+x*w , 75.5+y*h);
+                break;
+            }
 
-            doc.setFontSize(8.5);
-            doc.setFontStyle('normal');
-            doc.text("Unit Price: $  ", lm+46+x*w, 73.5+y*h);
-            doc.text(sign.unitPrice + " / " + sign.uom, lm+80+x*w, 73.5+y*h, align="right")
+            if(!sign.bulkType){
+                doc.setFontSize(8.5);
+                doc.setFontStyle('light');
+                doc.text("Unit Price: $  ", lm+46+x*w, 73.5+y*h);
+                doc.text(sign.unitPrice + " / " + sign.uom, lm+80+x*w, 73.5+y*h, align="right")
+            }
         break;
         case "percent":
             doc.setFontStyle("normal")
@@ -106,20 +150,20 @@ function generateSign(x, y, sign) {
         break;
         case "bogo":
             doc.setFillColor(0,0,0);
-            doc.roundedRect(lm+55+x*w, 40+y*h, 25, 25, 2, 2, 'F');
+            doc.roundedRect(lm+55+x*w, 45+y*h, 25, 25, 2, 2, 'F');
             doc.setTextColor(255,255,255);
             doc.setFontStyle('bold');
             doc.setFontSize(18);
-            doc.text("BUY", lm+58+x*w, 47+y*h);
-            doc.text("GET", lm+58+x*w, 52.5+y*h);
+            doc.text("BUY", lm+58+x*w, 52+y*h);
+            doc.text("GET", lm+58+x*w, 57.5+y*h);
             doc.setFontSize(20);
-            doc.text("FREE", lm+58+x*w, 58.5+y*h);
+            doc.text("FREE", lm+58+x*w, 63.5+y*h);
             doc.setFontSize(40);
-            doc.text("1", lm+70.5+x*w, 52.5+y*h);
+            doc.text("1", lm+70.5+x*w, 57.5+y*h);
 
             doc.setFontSize(5);
-            doc.text("Same Item of Equal", lm+67+x*w, 61+y*h, align="center");
-            doc.text("or Lesser Value", lm+67+x*w, 63+y*h, align="center");
+            doc.text("Same Item of Equal", lm+67+x*w, 66+y*h, align="center");
+            doc.text("or Lesser Value", lm+67+x*w, 68+y*h, align="center");
         
 
             doc.setTextColor(0,0,0);
@@ -131,10 +175,19 @@ function generateSign(x, y, sign) {
 
     // Details
     doc.setFontSize(8.5);
-    doc.setFontStyle('normal');
+    doc.setFontStyle('light');
     if(!sign.famGroup)
-        doc.text(sign.upc, lm+45+x*w, 77.5+y*h);
-    doc.text(sign.end, lm+81+x*w, 77.5+y*h, align="right");
+        doc.text(sign.end, lm+81+x*w, 77.5+y*h, align="right");
+
+    if(sign.bulkType) {
+        doc.setFontStyle('bold');
+        doc.setFontSize(16);
+        doc.text("PLU# " + sign.upc, lm+81+x*w, 74+y*h,align="right");
+    } else {
+        doc.setFontSize(8.5);
+        doc.setFontStyle('light');
+        doc.text(sign.upc, lm+44+x*w, 77.5+y*h);
+    }
 
     // Extras
     if(sign.thisVar) {
@@ -155,13 +208,13 @@ function generateSign(x, y, sign) {
             doc.triangle(lm+63+x*w,76.5+y*h,lm+64+x*w,77.75+y*h,lm+65+x*w,76.5+y*h,'F');
         break;
         case 1://ed
-            doc.text("ED", lm+62.5+x*w, 77.5+y*h);
+            doc.text("ED", lm+61.5+x*w, 77.5+y*h);
         break;
         case 2://pc
-            doc.text("PC", lm+62.5+x*w, 77.5+y*h);
+            doc.text("PC", lm+61.5+x*w, 77.5+y*h);
         break;
         case 3://ts
-            doc.text("TS", lm+62.5+x*w, 77.5+y*h);        
+            doc.text("TS", lm+61.5+x*w, 77.5+y*h);        
         break;
     }
     
@@ -199,7 +252,6 @@ function addSign() {
     signs[n].description = document.getElementById("dName").value;
     signs[n].priceType = document.querySelector('input[name="priceType"]:checked').value;
     
-    
     signs[n].regPrice = document.getElementById("rpValue").value;
     pDiv = document.getElementById("priceDiv").value;
     signs[n].price = document.getElementById("pValue").value;
@@ -224,6 +276,8 @@ function addSign() {
     endDate = document.getElementById("endDate").valueAsDate;
     signs[n].end = (endDate.getUTCMonth()+1) + "/" + endDate.getUTCDate() + "/" + endDate.getUTCFullYear();
     signs[n].saleType = document.getElementById("signType").selectedIndex;
+    signs[n].bulkType = document.getElementById("bulkType").selectedIndex;
+    
 
     signs[n].thisVar = document.getElementById("thisVar").checked;
     signs[n].closeDate = document.getElementById("closeDate").checked;

@@ -13,7 +13,7 @@
       Brand Name <input type="text" id="bName" value="Kraft"></br>
       Product Name <input type="text" id="pName" value="Stove Top Stuffing Mix"></br>
       <label id="desc">Description </label><textarea id="dName" cols="20" rows="3">Turkey&#13;&#10;120g</textarea></br>
-      Price <input type="radio" name="priceType" value="dollar" checked> <input type="number" id="priceDiv" value="4" min="1" style='width:2em'>/<input type="number" id="pValue" value="5.00" ></br>
+      Price <input type="radio" name="priceType" value="dollar" checked> <input type="number" id="priceDiv" value="1" min="1" style='width:2em'>/<input type="number" id="pValue" value="1.99" ></br>
       <input type="radio" name="priceType" value="percent"> <input type="number" id="percentOff" value="4" min="1" max="99" style='width:2em'> <label id="poLabel">% Off</label></br>
       <input type="radio" name="priceType" value="bogo"><label id="bogoLabel">BOGO</label> </br>
       Regular Price <input type="number" id="rpValue" value="2.39"></br>
@@ -30,6 +30,11 @@
       This Var <input type="checkbox" id="thisVar" ></br>
       Family Group <input type="checkbox" id="famGroup" ></br>
       Close Dated <input type="checkbox" id="closeDate" ></br>
+      Bulk <select id="bulkType">
+          <option value="none">No</option>
+          <option value="gram">100g</option>
+          <option value="lb">lb</option>
+        </select></br>
       <input type="button" id="genButton" onclick="addSign()" value="Add Sign">       
     </div>
     

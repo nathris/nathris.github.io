@@ -44,6 +44,7 @@ input[type=radio] {
     vertical-align: top;
 }
 
+#bulkType, 
 #signType {
     border-radius: 2px;
     border: 1px solid black;
