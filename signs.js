@@ -1,49 +1,110 @@
-var doc;
-var w = 89;
-var h = 57;
-var lm = 8;
+var doc; //jsPDF document
 
-var signs = [];
+var cW = 89;    //'c' size sign width, in mm
+var cH = 57;    //'c' size sign height, in mm
+var bW = 108;   //'b' size sign width, in mm
+var bH = 140;   //'b' size sign height, in mm
+
+var lm = 8;     //left margin, width of excess paper on c signs
+
+var signs = []; //sign array
+var size = 'c'; //current sign size
 
 var pages = 0;
 
 window.onload = function() {
     newDoc();
-
-    testExp = new RegExp('Android|webOS|iPhone|iPad|' +
-    'BlackBerry|Windows Phone|'  +
-    'Opera Mini|IEMobile|Mobile' , 
-   'i');
-   if (testExp.test(navigator.userAgent)) {
-           document.getElementById("genButton").value="Download";
-    }else{
-        //addSign();
-        printSigns();
-    }
-
+    printSigns();
 }
 
-function newDoc(){
-    doc = new jsPDF({
-        orientation: 'landscape',
-        format: 'letter'
-    });
 
+function newDoc(){
+    size = document.querySelector('input[name="signSize"]:checked').value;
+    if(size == 'b') {
+        doc = new jsPDF({
+            orientation: 'portrait',
+            format: 'letter'
+        });
+    }
+    else {
+        doc = new jsPDF({
+            orientation: 'landscape',
+            format: 'letter'
+        });
+    }
+
+    //C description, pricing
     doc.addFont("HelveticaNeueLight.ttf","Helvetica Neue", "light");
     doc.addFont("HelveticaNeueBold.ttf","Helvetica Neue", "bold");
     doc.addFont("HelveticaNeueMedium.ttf","Helvetica Neue", "medium");
     doc.addFont("HelveticaNeue.ttf", "Helvetica Neue", "normal");
+
+    //B description
+    doc.addFont("Raleway-Light.ttf", "Raleway", "light");
+    doc.addFont("Raleway-Regular.ttf", "Raleway", "normal");
+    doc.addFont("Raleway-Medium.ttf", "Raleway", "medium");    
+    doc.addFont("Raleway-Bold.ttf", "Raleway", "bold");
+    
 }
 
 function drawBackground(x,y) {
-    doc.setFillColor(255,0,0);
-    doc.rect(5+x*w, 24+y*h, 86, 10,'F');
-    doc.setFillColor(0,150,0);
-    doc.rect(5+x*w, 69+y*h, 41, 10,'F');
-    doc.triangle(46+x*w,69+y*h,52+x*w,74+y*h,46+x*w,79+y*h,'F')
+    if (size == 'b') {
+        var w = bW; var h = bH;
+        doc.setFillColor(255,0,0);
+        doc.rect(2+x*w, 2+y*h, 103, 30,'F');
+        doc.setFillColor(0,150,0);
+        doc.rect(2+x*w, 127+y*h, 60, 10,'F');
+        doc.triangle(63+x*w,127+y*h,69+x*w,132+y*h,63+x*w,138+y*h,'F')
+    }
+    else if (size == 'c') {
+        w = cW; h = cH;
+        doc.setFillColor(255,0,0);
+        doc.rect(5+x*w, 24+y*h, 86, 10,'F');
+        doc.setFillColor(0,150,0);
+        doc.rect(5+x*w, 69+y*h, 41, 10,'F');
+        doc.triangle(46+x*w,69+y*h,52+x*w,74+y*h,46+x*w,79+y*h,'F');
+    }
 }
 
-function generateSign(x, y, sign) {
+function splitBTitle(title) {
+    var max = 12;
+    if(title.length <= max) return title;
+
+    var sTitle = title.split(' ');
+    if(sTitle.length == 1) return title;
+
+    var fTitle = ["",""];
+    fTitle[0] = sTitle[0];
+    fTitle[1] = "";
+    for(var i = 1; i < sTitle.length; i++) {
+        if(fTitle[0].length + sTitle[i].length < max) fTitle[0] += ' ' + sTitle[i];
+        else {
+            if (fTitle[1].length == 0) fTitle[1] = sTitle[i];
+            else fTitle[1] += ' ' + sTitle[i];
+        }
+    }
+    return fTitle;
+}
+
+function generateBSign(x, y, sign) {
+    var w = bW; var h = bH;
+    var product = splitBTitle(sign.product);
+    doc.setFont("Helvetica Neue");
+    doc.setFontStyle("medium");
+    doc.setFontSize(34);
+    doc.text(product, 5+x*w, 52+y*h);
+    doc.setFontStyle("light");
+    doc.setFontSize(15);
+    doc.text(sign.brand, 5+x*w, 40.5+y*h);
+    if(typeof product === 'object')
+        doc.text(sign.description, 5+x*w, 32.5+y*h+20*product.length);
+    else 
+        doc.text(sign.description, 5+x*w, 60.5+y*h);
+        
+}
+
+function generateCSign(x, y, sign) {
+    var w = cW; var h = cH;
     doc.setFont("Helvetica Neue");
 
     // Product Name
@@ -137,7 +198,7 @@ function generateSign(x, y, sign) {
         break;
         case "percent":
             doc.setFontStyle("normal")
-            p = sign.price;
+            var p = sign.price;
             doc.setFontSize(68);
             doc.text((p) ? p:"00", lm+71+x*w, 64+y*h, align="right");
             doc.setFontSize(33);
@@ -228,16 +289,29 @@ function clearSigns() {
 function printSigns() {
     showBackground = document.getElementById("bgCheck").checked;
     pages = 0;
-    for(i = 0; i < signs.length; i++) {
-        y = Math.floor(i/3);
-        x = i%3;
-        if(i%9 == 0 && i > 2) {
-            pages++;
-            doc.addPage();
+    for(var i = 0; i < signs.length; i++) {
+        if(size == 'c') {
+            var y = Math.floor(i/3);
+            var x = i%3;
+            
+            if(i%9 == 0 && i > 2) {
+                pages++;
+                doc.addPage();
+            }
+            if(showBackground) drawBackground(x,y-3*pages);
+            generateCSign(x, y-3*pages, signs[i]);            
+        } else if (size == 'b') {
+            var y = Math.floor(i/2);
+            var x = i%2;
+            if(i%4 == 0 && i > 2) {
+                pages++;
+                doc.addPage();
+            }
+            if(showBackground) drawBackground(x,y-2*pages);
+            generateBSign(x, y-2*pages, signs[i]);
+            
         }
-        if(showBackground) drawBackground(x,y-3*pages);
         //generateSign(x, y-3*pages, signs[i].brand, signs[i].product, signs[i].description, signs[i].price, signs[i].unit, signs[i].uom, signs[i].upc, signs[i].end,signs[i].sale,signs[i].youSave.toFixed(2));
-        generateSign(x, y-3*pages, signs[i]);
     }
     
     document.getElementById("preview").src = doc.output('datauristring');
