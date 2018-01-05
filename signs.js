@@ -1,10 +1,5 @@
 var doc; //jsPDF document
 
-var cW = 89;    //'c' size sign width, in mm
-var cH = 57;    //'c' size sign height, in mm
-var bW = 108;   //'b' size sign width, in mm
-var bH = 140;   //'b' size sign height, in mm
-
 var lm = 8;     //left margin, width of excess paper on c signs
 
 var signs = []; //sign array
@@ -16,7 +11,6 @@ window.onload = function() {
     newDoc();
     printSigns();
 }
-
 
 function newDoc(){
     size = document.querySelector('input[name="signSize"]:checked').value;
@@ -44,6 +38,8 @@ function newDoc(){
     doc.addFont("Raleway-Regular.ttf", "Raleway", "normal");
     doc.addFont("Raleway-Medium.ttf", "Raleway", "medium");    
     doc.addFont("Raleway-Bold.ttf", "Raleway", "bold");
+
+    debug();
     
 }
 
@@ -53,8 +49,8 @@ function drawBackground(x,y) {
         doc.setFillColor(255,0,0);
         doc.rect(2+x*w, 2+y*h, 103, 30,'F');
         doc.setFillColor(0,150,0);
-        doc.rect(2+x*w, 127+y*h, 60, 10,'F');
-        doc.triangle(63+x*w,127+y*h,69+x*w,132+y*h,63+x*w,138+y*h,'F')
+        doc.rect(2+x*w, 127+y*h, 50, 10,'F');
+        doc.triangle(52+x*w, 127+y*h,    57+x*w, 132+y*h,    52+x*w,137+y*h,'F')
     }
     else if (size == 'c') {
         w = cW; h = cH;
@@ -66,219 +62,27 @@ function drawBackground(x,y) {
     }
 }
 
-function splitBTitle(title) {
-    var max = 12;
-    if(title.length <= max) return title;
 
-    var sTitle = title.split(' ');
-    if(sTitle.length == 1) return title;
-
-    var fTitle = ["",""];
-    fTitle[0] = sTitle[0];
-    fTitle[1] = "";
-    for(var i = 1; i < sTitle.length; i++) {
-        if(fTitle[0].length + sTitle[i].length < max) fTitle[0] += ' ' + sTitle[i];
-        else {
-            if (fTitle[1].length == 0) fTitle[1] = sTitle[i];
-            else fTitle[1] += ' ' + sTitle[i];
-        }
-    }
-    return fTitle;
+function font(fontName, fontWeight, fontSize) {
+    doc.setFont(fontName);
+    doc.setFontStyle(fontWeight);
+    doc.setFontSize(fontSize);
 }
 
-function generateBSign(x, y, sign) {
-    var w = bW; var h = bH;
-    var product = splitBTitle(sign.product);
-    doc.setFont("Helvetica Neue");
-    doc.setFontStyle("medium");
-    doc.setFontSize(34);
-    doc.text(product, 5+x*w, 52+y*h);
-    doc.setFontStyle("light");
-    doc.setFontSize(15);
-    doc.text(sign.brand, 5+x*w, 40.5+y*h);
-    if(typeof product === 'object')
-        doc.text(sign.description, 5+x*w, 32.5+y*h+20*product.length);
-    else 
-        doc.text(sign.description, 5+x*w, 60.5+y*h);
-        
-}
-
-function generateCSign(x, y, sign) {
-    var w = cW; var h = cH;
-    doc.setFont("Helvetica Neue");
-
-    // Product Name
-    doc.setFontStyle("medium");
-    if(sign.product.length < 14) {
-        doc.setFontSize(17);
-        doc.text(sign.product, lm+x*w, 46+y*h);
-        doc.setFontStyle("light");
-        doc.setFontSize(10);
-        doc.text(sign.brand, lm+x*w, 40.5+y*h);
-        doc.text(sign.description, lm+x*w, 50.5+y*h);
-    } else if (sign.product.length < 20) {
-        doc.setFontSize(15);
-        doc.text(sign.product, lm+x*w, 46+y*h);
-        doc.setFontStyle("light");
-        doc.setFontSize(10);
-        doc.text(sign.brand, lm+x*w, 41+y*h);
-        doc.text(sign.description, lm+x*w, 50+y*h);
-    } else {
-        doc.setFontSize(13);
-        doc.text(sign.product, lm+x*w, 46+y*h);
-        doc.setFontStyle("light");
-        doc.setFontSize(10);
-        doc.text(sign.brand, lm+x*w, 41+y*h);
-        doc.text(sign.description, lm+x*w, 50+y*h);
-    }
-    // Price
-    switch(sign.priceType) {
-        case "dollar":
-            doc.setFontStyle("normal")
-            p = sign.price.split(".");  
-            if(p[0].length >= 3) {
-                doc.setFontSize(58);
-                doc.text((p[0]) ? p[0]:"0", lm+70.5+x*w, 62.5+y*h, align="right");
-                doc.setFontSize(29);
-                doc.text((p[1]) ? p[1]:"00", lm+70.5+x*w, 54.5+y*h);
-            } else if(p[0] === "0") {
-                doc.setFontSize(68);
-                doc.text((p[1]) ? p[1]:"00", lm+71+x*w, 64+y*h, align="right");
-                doc.setFontSize(33);
-                doc.text("¢", lm+70+x*w, 55+y*h);
-                if(sign.bulkType == 1) {
-                    doc.setFontStyle("medium");
-                    doc.setFontSize(9);
-                    doc.text("per\n100g", lm+71+x*w, 60+y*h);                    
-                } else if(sign.bulkType ==  2) {
-                    doc.setFontStyle("medium");                    
-                    doc.setFontSize(9);
-                    doc.text("per lb", lm+71+x*w, 60+y*h);                    
-                }
-            } else {
-                doc.setFontSize(74);
-                doc.text((p[0]) ? p[0]:"0", (p[0].slice(-1)==1) ? lm+70+x*w : lm+68+x*w, 66+y*h, align="right");
-                doc.setFontSize(37);
-                doc.text((p[1]) ? p[1]:"00", lm+68+x*w, 56.5+y*h);
-                if(sign.bulkType == 1) {
-                    doc.setFontStyle("medium");
-                    doc.setFontSize(10);
-                    doc.text("per\n100g", lm+69+x*w, 61+y*h);                    
-                } else if(sign.bulkType ==  2) {
-                    doc.setFontStyle("medium");                    
-                    doc.setFontSize(10);
-                    doc.text("per lb", lm+69+x*w, 61+y*h);                    
-                }
-            }
-            
-            switch(sign.bulkType) {
-                case 0:
-                    doc.setFontSize(11);
-                    doc.setFontStyle('medium');
-                    doc.text("You Save $" + sign.youSave + " ea", lm+x*w , 75.5+y*h);
-                break;
-                case 1:
-                    doc.setFontSize(10);
-                    doc.setFontStyle('medium');
-                    doc.text("You Save $" + sign.youSave + " per 100g", lm+x*w , 75.5+y*h); 
-                break;
-                case 2:
-                    doc.setFontSize(10);
-                    doc.setFontStyle('medium');
-                    doc.text("You Save $" + sign.youSave + " per lb", lm+x*w , 75.5+y*h);
-                break;
-            }
-
-            if(!sign.bulkType){
-                doc.setFontSize(8.5);
-                doc.setFontStyle('light');
-                doc.text("Unit Price: $  ", lm+46+x*w, 73.5+y*h);
-                doc.text(sign.unitPrice + " / " + sign.uom, lm+80+x*w, 73.5+y*h, align="right")
-            }
-        break;
-        case "percent":
-            doc.setFontStyle("normal")
-            var p = sign.price;
-            doc.setFontSize(68);
-            doc.text((p) ? p:"00", lm+71+x*w, 64+y*h, align="right");
-            doc.setFontSize(33);
-            doc.text("%", lm+71+x*w, 55+y*h);
-            doc.setFontSize(8.5);
-            doc.text("Off\nAt Till", lm+72+x*w, 60+y*h);
-            doc.setFontSize(11);
-            doc.setFontStyle('medium');
-            doc.text("Save Now!", lm+x*w , 75.5+y*h);
-        break;
-        case "bogo":
-            doc.setFillColor(0,0,0);
-            doc.roundedRect(lm+55+x*w, 45+y*h, 25, 25, 2, 2, 'F');
-            doc.setTextColor(255,255,255);
-            doc.setFontStyle('bold');
-            doc.setFontSize(18);
-            doc.text("BUY", lm+58+x*w, 52+y*h);
-            doc.text("GET", lm+58+x*w, 57.5+y*h);
-            doc.setFontSize(20);
-            doc.text("FREE", lm+58+x*w, 63.5+y*h);
-            doc.setFontSize(40);
-            doc.text("1", lm+70.5+x*w, 57.5+y*h);
-
-            doc.setFontSize(5);
-            doc.text("Same Item of Equal", lm+67+x*w, 66+y*h, align="center");
-            doc.text("or Lesser Value", lm+67+x*w, 68+y*h, align="center");
-        
-
-            doc.setTextColor(0,0,0);
-            doc.setFontSize(11);
-            doc.setFontStyle('medium');
-            doc.text("You Save $" + sign.regPrice + " ea", lm+x*w , 75.5+y*h);
-        break;
-    }
-
-    // Details
-    doc.setFontSize(8.5);
-    doc.setFontStyle('light');
-    if(!sign.famGroup)
-        doc.text(sign.end, lm+81+x*w, 77.5+y*h, align="right");
-
-    if(sign.bulkType) {
-        doc.setFontStyle('bold');
-        doc.setFontSize(16);
-        doc.text("PLU# " + sign.upc, lm+81+x*w, 74+y*h,align="right");
-    } else {
-        doc.setFontSize(8.5);
-        doc.setFontStyle('light');
-        doc.text(sign.upc, lm+44+x*w, 77.5+y*h);
-    }
-
-    // Extras
-    if(sign.thisVar) {
-        doc.setFontSize(14);
-        doc.setFontStyle('bold');
-        doc.text("This Variety Only", lm+x*w, 66+y*h);
-    }
-    if(sign.closeDate) {
-        doc.setFontSize(16);
-        doc.setFontStyle('bold');
-        doc.text("Close-Dated", lm+80+x*w, 41+y*h, align="right");
-    }
-    
-    switch(sign.saleType) {
-        case 0://ad
-            doc.setFillColor(0);
-            doc.triangle(lm+63+x*w,76.5+y*h,lm+64+x*w,75.25+y*h,lm+65+x*w,76.5+y*h,'F');
-            doc.triangle(lm+63+x*w,76.5+y*h,lm+64+x*w,77.75+y*h,lm+65+x*w,76.5+y*h,'F');
-        break;
-        case 1://ed
-            doc.text("ED", lm+61.5+x*w, 77.5+y*h);
-        break;
-        case 2://pc
-            doc.text("PC", lm+61.5+x*w, 77.5+y*h);
-        break;
-        case 3://ts
-            doc.text("TS", lm+61.5+x*w, 77.5+y*h);        
-        break;
-    }
-    
+function drawBogo(x,y,w,h,sx,sy,scale) {
+    doc.setFillColor(0,0,0);
+    doc.roundedRect(lm+sx+x*w, sy+y*h, 25*scale, 25*scale, 2, 2, 'F');
+    doc.setTextColor(255,255,255);
+    font("Helvetica Neue", "bold", 18*scale);
+    doc.text("BUY", lm+sx+3*scale+x*w, sy+7*scale+y*h);
+    doc.text("GET", lm+sx+3*scale+x*w, sy+12.5*scale+y*h);
+    font("Helvetica Neue", "bold", 20*scale);
+    doc.text("FREE", lm+sx+3*scale+x*w, sy+18.5*scale+y*h);
+    font("Arial", "bold", 40*scale);
+    doc.text("1", lm+sx+15.5*scale+x*w, sy+12.5*scale+y*h);
+    font("Helvetica Neue", "normal", 5*scale);
+    doc.text("Same Item of Equal", lm+sx+12*scale+x*w, sy+21*scale+y*h, align="center");
+    doc.text("or Lesser Value", lm+sx+12*scale+x*w, sy+23*scale+y*h, align="center");
 }
 
 function clearSigns() {
@@ -339,6 +143,16 @@ function addSign() {
         signs.pop();
         alert("Error: Sale price is higher than regular price!");
         return;
+    } else if(signs[n].youSave < 1) {
+        signs[n].youSave = signs[n].youSave*100 + "¢";
+    } else {
+        signs[n].youSave = '$' + signs[n].youSave;
+    }
+
+    if(signs[n].regPrice < 1) {
+        signs[n].regPrice = signs[n].regPrice*100 + "¢";
+    } else {
+        signs[n].regPrice = '$' + signs[n].regPrice;
     }
 
     
@@ -361,4 +175,32 @@ function addSign() {
     document.getElementById("numSigns").innerHTML = signs.length;
 
     printSigns();
+}
+
+function debug() {
+    signs = [
+        { brand: "Kraft", bulkType: 0, closeDate: false, description: "Turkey\n120g", end: "12/25/2017", famGroup: false, price: "1.99", priceType: "dollar",
+        product: "Stove Top Stuffing Mix", regPrice: "$2.39", saleType: 0, thisVar: false, unitPrice: "1.04", uom: "100G", upc:"6618804390", youSave: "40¢"},
+        { brand: "Kraft", bulkType: 0, closeDate: false, description: "Turkey\n120g", end: "12/25/2017", famGroup: false, price: "0.99", priceType: "dollar",
+        product: "Stove Top Stuffing Mix", regPrice: "$2.39", saleType: 0, thisVar: false, unitPrice: "1.04", uom: "100G", upc:"6618804390", youSave: "40¢"},
+        { brand: "Kraft", bulkType: 0, closeDate: false, description: "Turkey\n120g", end: "12/25/2017", famGroup: false, price: "2/1.99", priceType: "dollar",
+        product: "Stove Top Stuffing Mix", regPrice: "$2.39", saleType: 0, thisVar: false, unitPrice: "1.04", uom: "100G", upc:"6618804390", youSave: "40¢"},
+        { brand: "Kraft", bulkType: 0, closeDate: false, description: "Turkey\n120g", end: "12/25/2017", famGroup: false, price: "25", priceType: "percent",
+        product: "Stove Top Stuffing Mix", regPrice: "$2.39", saleType: 0, thisVar: false, unitPrice: "1.04", uom: "100G", upc:"6618804390", youSave: "40¢"},
+        { brand: "Kraft", bulkType: 0, closeDate: false, description: "Turkey\n120g", end: "12/25/2017", famGroup: false, price: "1.99", priceType: "bogo",
+        product: "Stove Top Stuffing Mix", regPrice: "$2.39", saleType: 0, thisVar: false, unitPrice: "1.04", uom: "100G", upc:"6618804390", youSave: "40¢"},
+        { brand: "Kraft", bulkType: 1, closeDate: false, description: "Turkey\n120g", end: "12/25/2017", famGroup: false, price: "1.99", priceType: "dollar",
+        product: "Stove Top Stuffing Mix", regPrice: "$2.39", saleType: 0, thisVar: false, unitPrice: "1.04", uom: "100G", upc:"4011", youSave: "40¢"},
+        { brand: "Kraft", bulkType: 2, closeDate: false, description: "Turkey\n120g", end: "12/25/2017", famGroup: false, price: "1.99", priceType: "dollar",
+        product: "Stove Top Stuffing Mix", regPrice: "$2.39", saleType: 0, thisVar: false, unitPrice: "1.04", uom: "100G", upc:"4011", youSave: "40¢"},
+        { brand: "Kraft", bulkType: 0, closeDate: false, description: "Turkey\n120g", end: "12/25/2017", famGroup: false, price: "1.99", priceType: "dollar",
+        product: "Stove Top Stuffing Mix", regPrice: "$2.39", saleType: 0, thisVar: true, unitPrice: "1.04", uom: "100G", upc:"6618804390", youSave: "40¢"},
+        { brand: "Kraft", bulkType: 0, closeDate: true, description: "Turkey\n120g", end: "12/25/2017", famGroup: false, price: "1.99", priceType: "dollar",
+        product: "Stove Top Stuffing Mix", regPrice: "$2.39", saleType: 0, thisVar: false, unitPrice: "1.04", uom: "100G", upc:"6618804390", youSave: "40¢"},
+        { brand: "Kraft", bulkType: 0, closeDate: false, description: "Turkey\n120g", end: "12/25/2017", famGroup: false, price: "1.99", priceType: "dollar",
+        product: "Stove Top Stuffing Mix", regPrice: "$2.39", saleType: 0, thisVar: true, unitPrice: "1.04", uom: "100G", upc:"6618804390", youSave: "40¢"},
+        { brand: "Kraft", bulkType: 0, closeDate: true, description: "Turkey\n120g", end: "12/25/2017", famGroup: false, price: "1.99", priceType: "dollar",
+        product: "Stove Top Stuffing Mix", regPrice: "$2.39", saleType: 0, thisVar: false, unitPrice: "1.04", uom: "100G", upc:"6618804390", youSave: "40¢"},
+        { brand: "Kraft", bulkType: 0, closeDate: false, description: "Selected Varieties\n120g", end: "12/25/2017", famGroup: true, price: "1.99", priceType: "dollar",
+        product: "Stove Top Stuffing Mix", regPrice: "$2.39", saleType: 0, thisVar: false, unitPrice: "1.04", uom: "100G", upc:"6618804390", youSave: "40¢"}];
 }
