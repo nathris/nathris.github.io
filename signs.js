@@ -9,6 +9,7 @@ var pages = 0;
 
 window.onload = function() {
     newDoc();
+    debug();
     printSigns();
 }
 
@@ -38,8 +39,6 @@ function newDoc(){
     doc.addFont("Raleway-Regular.ttf", "Raleway", "normal");
     doc.addFont("Raleway-Medium.ttf", "Raleway", "medium");    
     doc.addFont("Raleway-Bold.ttf", "Raleway", "bold");
-
-    debug();
     
 }
 
