@@ -26,13 +26,13 @@ function generateBSign(x, y, sign) {
     var w = bW; var h = bH;
     var product = splitBTitle(sign.product);
     font("Helvetica Neue", "medium", 34);
-    doc.text(product, 5+x*w, 52+y*h);
-    font("Helvetica Neue", "light", 15);
-    doc.text(sign.brand, 5+x*w, 40.5+y*h);
+    doc.text(product, 5+x*w, 55+y*h);
+    font("Helvetica Neue", "medium", 18);
+    doc.text(sign.brand, 5+x*w, 43.5+y*h);
     if(typeof product === 'object')
-        doc.text(sign.description, 5+x*w, 32.5+y*h+20*product.length);
+        doc.text(sign.description, 5+x*w, 36.5+y*h+20*product.length);
     else 
-        doc.text(sign.description, 5+x*w, 60.5+y*h);
+        doc.text(sign.description, 5+x*w, 64.5+y*h);
 
     // Price
     switch(sign.priceType) {
@@ -62,7 +62,7 @@ function generateBSign(x, y, sign) {
                     doc.text("per\n100g",       lm+71+x*w,      104+y*h);                    
                 } else if(sign.bulkType ==  2) {
                     font("Helvetica Neue", "medium", 15);
-                    doc.text("per lb",          lm+71+x*w,      104+y*h);                    
+                    doc.text("per\nlb",          lm+71+x*w,      104+y*h);                    
                 }
             }
             
@@ -82,9 +82,9 @@ function generateBSign(x, y, sign) {
             }
 
             if(!sign.bulkType){
-                font("Helvetica Neue", "light", 9);
-                doc.text("Unit Price: $  ", lm+50+x*w, 130.5+y*h);
-                doc.text(sign.unitPrice + " / " + sign.uom, lm+84+x*w, 130.5+y*h, align="right")
+                font("Helvetica Neue", "normal", 10);
+                doc.text("Unit Price: $  ", lm+50+x*w, 125.5+y*h);
+                doc.text(sign.unitPrice + " / " + sign.uom, lm+92+x*w, 125.5+y*h, align="right")
             }
         break;
         case "percent":
@@ -107,31 +107,30 @@ function generateBSign(x, y, sign) {
     }
     
     // Details
-    font("Helvetica Neue", "light", 8.5);
-    doc.text(sign.end, lm+87+x*w, 135.5+y*h, align="right");
-
     if(sign.bulkType) {
         font("Helvetica Neue", "bold", 16);
-        doc.text("PLU# " + sign.upc, lm+81+x*w, 130.5+y*h,align="right");
+        doc.text("PLU# " + sign.upc, lm+80+x*w, 125.5+y*h,align="right");
     } else {
-        font("Helvetica Neue", "light", 8.5);
-        doc.text(sign.upc, lm+50+x*w, 135.5+y*h);
+        font("Helvetica Neue", "normal", 9.5);
+        doc.text(sign.upc, lm+50+x*w, 131.5+y*h);
     }
 
+    font("Helvetica Neue", "normal", 9.5);
     switch(sign.saleType) {
         case 0://ad
             doc.setFillColor(0);
-            doc.triangle(lm+68.5+x*w,134.5+y*h,    lm+69.5+x*w,133.25+y*h,    lm+70.5+x*w,134.5+y*h,'F');
-            doc.triangle(lm+68.5+x*w,134.5+y*h,    lm+69.5+x*w,135.75+y*h,    lm+70.5+x*w,134.5+y*h,'F');
+            doc.triangle(lm+70.5+x*w,130.5+y*h,    lm+71.5+x*w,129.25+y*h,    lm+72.5+x*w,130.5+y*h,'F');
+            doc.triangle(lm+70.5+x*w,130.5+y*h,    lm+71.5+x*w,131.75+y*h,    lm+72.5+x*w,130.5+y*h,'F');
+            doc.text(sign.end, lm+92+x*w, 131.5+y*h, align="right");
         break;
         case 1://ed
-            doc.text("ED", lm+61.5+x*w, 77.5+y*h);
+            doc.text("ED " + sign.end, lm+93+x*w, 131.5+y*h, align="right");
         break;
         case 2://pc
-            doc.text("PC", lm+61.5+x*w, 77.5+y*h);
+            doc.text("PC " + sign.end, lm+93+x*w, 131.5+y*h, align="right");
         break;
         case 3://ts
-            doc.text("TS", lm+61.5+x*w, 77.5+y*h);        
+            doc.text("TS " + sign.end, lm+93+x*w, 131.5+y*h, align="right");
         break;
     }
         

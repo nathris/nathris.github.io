@@ -48,8 +48,8 @@ function drawBackground(x,y) {
         doc.setFillColor(255,0,0);
         doc.rect(2+x*w, 2+y*h, 103, 30,'F');
         doc.setFillColor(0,150,0);
-        doc.rect(2+x*w, 127+y*h, 50, 10,'F');
-        doc.triangle(52+x*w, 127+y*h,    57+x*w, 132+y*h,    52+x*w,137+y*h,'F')
+        doc.rect(2+x*w, 127+y*h, 50, 12,'F');
+        doc.triangle(52+x*w, 127+y*h,    57+x*w, 133+y*h,    52+x*w,139+y*h,'F')
     }
     else if (size == 'c') {
         w = cW; h = cH;
